@@ -14,6 +14,9 @@
 		EDEC5CCF216E907800517854 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDEC5CCD216E907800517854 /* Main.storyboard */; };
 		EDEC5CD1216E907C00517854 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDEC5CD0216E907C00517854 /* Assets.xcassets */; };
 		EDEC5CD4216E907C00517854 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDEC5CD2216E907C00517854 /* LaunchScreen.storyboard */; };
+		EDEC5CDE216E91A400517854 /* model in Resources */ = {isa = PBXBuildFile; fileRef = EDEC5CDB216E91A300517854 /* model */; };
+		EDEC5CDF216E91A400517854 /* supporting files in Resources */ = {isa = PBXBuildFile; fileRef = EDEC5CDC216E91A300517854 /* supporting files */; };
+		EDEC5CE0216E91A400517854 /* collection view in Resources */ = {isa = PBXBuildFile; fileRef = EDEC5CDD216E91A300517854 /* collection view */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,9 @@
 		EDEC5CD0216E907C00517854 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EDEC5CD3216E907C00517854 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EDEC5CD5216E907C00517854 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EDEC5CDB216E91A300517854 /* model */ = {isa = PBXFileReference; lastKnownFileType = folder; path = model; sourceTree = "<group>"; };
+		EDEC5CDC216E91A300517854 /* supporting files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "supporting files"; sourceTree = "<group>"; };
+		EDEC5CDD216E91A300517854 /* collection view */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "collection view"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,9 @@
 		EDEC5CC4216E907800517854 /* Persist Image Gallery */ = {
 			isa = PBXGroup;
 			children = (
+				EDEC5CDD216E91A300517854 /* collection view */,
+				EDEC5CDB216E91A300517854 /* model */,
+				EDEC5CDC216E91A300517854 /* supporting files */,
 				EDEC5CC5216E907800517854 /* AppDelegate.swift */,
 				EDEC5CC7216E907800517854 /* DocumentBrowserViewController.swift */,
 				EDEC5CC9216E907800517854 /* DocumentViewController.swift */,
@@ -130,7 +139,10 @@
 			files = (
 				EDEC5CD4216E907C00517854 /* LaunchScreen.storyboard in Resources */,
 				EDEC5CD1216E907C00517854 /* Assets.xcassets in Resources */,
+				EDEC5CE0216E91A400517854 /* collection view in Resources */,
+				EDEC5CDE216E91A400517854 /* model in Resources */,
 				EDEC5CCF216E907800517854 /* Main.storyboard in Resources */,
+				EDEC5CDF216E91A400517854 /* supporting files in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
