@@ -17,11 +17,27 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         collectionView.dataSource = self
         collectionView.delegate = self
     }
+    fileprivate func loadDataFromDocument() {
+        document?.open{success in
+            if success {
+                self.collectionView.performBatchUpdates({
+                    self.title = self.document?.localizedName
+                    self.imageGallery = self.document?.imageGallery ?? ImageGallery()
+                    for i in self.imageGallery.addresses.indices {
+                        self.collectionView.insertItems(at: [IndexPath(item: i, section: 0)])
+                    }
+                })
+                self.collectionView.collectionViewLayout.invalidateLayout()
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setSelfAsDelegate()
         collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinch)))
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+        loadDataFromDocument()
     }
     
     fileprivate func adjustCellWidthToScale(_ pinchRecognizer: UIPinchGestureRecognizer) {
@@ -65,22 +81,6 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         }
     }
     var document: ImageGalleryDocument?
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        document?.open{success in
-            if success {
-                self.collectionView.performBatchUpdates({
-                    self.title = self.document?.localizedName
-                    self.imageGallery = self.document?.imageGallery ?? ImageGallery()
-                    for i in self.imageGallery.addresses.indices {
-                        self.collectionView.insertItems(at: [IndexPath(item: i, section: 0)])
-                    }
-                })
-                self.collectionView.collectionViewLayout.invalidateLayout()
-            }
-        }
-    }
     
     func save() {
         document?.imageGallery = self.imageGallery
