@@ -16,7 +16,7 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         delegate = self
         allowsDocumentCreation = false
         allowsPickingMultipleItems = false
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        //if UIDevice.current.userInterfaceIdiom == .pad {
             // create a blank document in our Application Support directory
             // this template will be copied to Documents directory for new docs
             // see didRequestDocumentCreationWithHandler delegate method
@@ -37,9 +37,8 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
                 // don't enable the Create Document button in the UI
                 allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
             }
-        }
+       // }
         //TESTING
-        allowsDocumentCreation = true
     }
     
     
@@ -71,12 +70,21 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     // MARK: Document Presentation
     
     func presentDocument(at documentURL: URL) {
+        
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let documentVC = storyBoard.instantiateViewController(withIdentifier: "DocumentMVC")
         if let imageGalleryVC = documentVC.contents as? imageCollectionViewController {
             imageGalleryVC.document = ImageGalleryDocument(fileURL: documentURL)
         }
         present(documentVC, animated: true)
+    }
+    var defaultGallery: ImageGallery{
+        var ig = ImageGallery()
+        let defaultImageURL = URL(string: "https://wallpaperbrowse.com/media/images/IMG_144869.jpg")!.imageURL
+        let defaultAddress = Address(aspectRatio: 1,url: defaultImageURL)
+        let defaultAddress2 = Address(aspectRatio: 2,url: defaultImageURL)
+        ig.addresses = [defaultAddress,defaultAddress2,defaultAddress,defaultAddress2]
+        return ig
     }
 }
 

@@ -9,19 +9,13 @@
 import UIKit
 
 class imageCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout,UICollectionViewDropDelegate, UICollectionViewDragDelegate {
-    var isFirstTimeLoaded = true
+    
     fileprivate func setSelfAsDelegate() {
         collectionView.dragInteractionEnabled = true
         collectionView.dropDelegate = self
         collectionView.dragDelegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
-    }
-    override func viewDidLayoutSubviews() {
-        if isFirstTimeLoaded {
-            collectionView.collectionViewLayout.invalidateLayout()
-            isFirstTimeLoaded = false
-        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,8 +70,14 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         super.viewWillAppear(animated)
         document?.open{success in
             if success {
-                self.title = self.document?.localizedName
-                self.imageGallery = self.document?.imageGallery ?? ImageGallery()
+                self.collectionView.performBatchUpdates({
+                    self.title = self.document?.localizedName
+                    self.imageGallery = self.document?.imageGallery ?? ImageGallery()
+                    for i in self.imageGallery.addresses.indices {
+                        self.collectionView.insertItems(at: [IndexPath(item: i, section: 0)])
+                    }
+                })
+                self.collectionView.collectionViewLayout.invalidateLayout()
             }
         }
     }
