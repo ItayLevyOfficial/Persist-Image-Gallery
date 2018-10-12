@@ -107,6 +107,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         }
     }
     //MARK: - Drop
+    
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         let isSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
         return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
@@ -124,7 +125,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
                 performLocalDragDrop(collectionView, sourceIndexPath, destinationIndexPath)
                 coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
             } else {
-                performExternalDragDrop(coordinator, item, destinationIndexPath)
+                performExternalDrop(coordinator, item, destinationIndexPath)
             }
         }
         collectionView.collectionViewLayout.invalidateLayout()
@@ -138,7 +139,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         })
     }
     
-    fileprivate func performExternalDragDrop(_ coordinator: UICollectionViewDropCoordinator, _ item: UICollectionViewDropItem, _ destinationIndexPath: IndexPath) {
+    fileprivate func performExternalDrop(_ coordinator: UICollectionViewDropCoordinator, _ item: UICollectionViewDropItem, _ destinationIndexPath: IndexPath) {
         //external item has dragged
         let placeHolderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: Consts.placeHolderCellIdentifier))
         var url: URL?
@@ -167,15 +168,25 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         }
     }
     var cellWidth: CGFloat = 200
+    fileprivate func setImageViewImage(image: UIImage, forCell cell: imageCollectionViewCell) {
+        DispatchQueue.main.async {
+            cell.imageView.image = image
+            cell.spinner.stopAnimating()
+        }
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = (collectionView.dequeueReusableCell(withReuseIdentifier: Consts.imageCellIdentifier, for: indexPath) as! imageCollectionViewCell)
         DispatchQueue.global(qos: .userInitiated).async {[weak self] in
-            let oldAdress = self?.imageGallery.addresses[indexPath.item]
-            if let data = try? Data(contentsOf: self!.imageGallery.addresses[indexPath.item].url),let image = UIImage(data: data), oldAdress == self?.imageGallery.addresses[indexPath.item]{
-                DispatchQueue.main.async {
-                    cell.imageView.image = image
-                    cell.spinner.stopAnimating()
-                }
+            let oldAddress = self?.imageGallery.addresses[indexPath.item] //later we make sure the user haven't druged the current cell in                    the meanwhile
+            let url: URL = self!.imageGallery.addresses[indexPath.item].url
+            let request = URLRequest(url: url)
+            if let data = URLCache.shared.cachedResponse(for: request)?.data, let image = UIImage(data: data), oldAddress == self?.imageGallery.addresses[indexPath.item] {
+                self?.setImageViewImage(image: image, forCell: cell)
+            }
+            else if let data = try? Data(contentsOf: url),let image = UIImage(data: data), oldAddress == self?.imageGallery.addresses[indexPath.item]{
+                self?.setImageViewImage(image: image, forCell: cell)
+                URLCache.shared.storeCachedResponse(CachedURLResponse(response: URLResponse(), data: data), for: request)
             }
         }
         return cell
