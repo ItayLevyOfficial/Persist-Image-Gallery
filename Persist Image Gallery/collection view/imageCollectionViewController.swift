@@ -20,24 +20,15 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
     override func viewDidLayoutSubviews() {
         if isFirstTimeLoaded {
             collectionView.collectionViewLayout.invalidateLayout()
-            isFirstTimeLoaded.toggle()
+            isFirstTimeLoaded = false
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         setSelfAsDelegate()
         collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinch)))
-        title = imageGallery.name
-//        let defaultImageURL = URL(string: "https://wallpaperbrowse.com/media/images/IMG_144869.jpg")!.imageURL
-//        collectionView.performBatchUpdates({
-//            let defaultAddress = Address(aspectRatio: 1, url: defaultImageURL)
-//            let secondDefaultAddress = Address(aspectRatio: 2, url: defaultImageURL)
-//            imageGallery.addresses += [defaultAddress,secondDefaultAddress,defaultAddress,secondDefaultAddress]
-//            collectionView.insertItems(at: [IndexPath(item: 0, section: 0),IndexPath(item: 1, section: 0),IndexPath(item: 2, section: 0),IndexPath(item: 3, section: 0)])
-//        })
-        //assigment 5 hint 17
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-        }
+    }
     
     fileprivate func adjustCellWidthToScale(_ pinchRecognizer: UIPinchGestureRecognizer) {
         let newCellWidth = pinchRecognizer.scale*cellWidth
@@ -72,7 +63,31 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         }
     }
     
-    //DRAG
+    //MARK: - Persistence
+
+    @IBAction func close(_ sender: UIBarButtonItem) {
+        dismiss(animated: true){
+            self.document?.close()
+        }
+    }
+    var document: ImageGalleryDocument?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        document?.open{success in
+            if success {
+                self.title = self.document?.localizedName
+                self.imageGallery = self.document?.imageGallery ?? ImageGallery()
+            }
+        }
+    }
+    
+    func save() {
+        document?.imageGallery = self.imageGallery
+        document?.updateChangeCount(.done)
+    }
+    
+    //MARK: - DRAG
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         session.localContext = collectionView
         return dragItems(at: indexPath)
@@ -91,7 +106,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
             return []
         }
     }
-    //Drop
+    //MARK: - Drop
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         let isSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
         return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
@@ -145,8 +160,12 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
             }
         }
     }
-    //DATA SOURCE
-    var imageGallery: ImageGallery = ImageGallery(name: "", addresses: [])
+    //MARK: - DATA SOURCE
+    var imageGallery: ImageGallery = ImageGallery() {
+        didSet{
+            save()
+        }
+    }
     var cellWidth: CGFloat = 200
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = (collectionView.dequeueReusableCell(withReuseIdentifier: Consts.imageCellIdentifier, for: indexPath) as! imageCollectionViewCell)

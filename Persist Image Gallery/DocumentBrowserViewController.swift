@@ -13,34 +13,42 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         delegate = self
-        
-        allowsDocumentCreation = true
+        allowsDocumentCreation = false
         allowsPickingMultipleItems = false
-        
-        // Update the style of the UIDocumentBrowserViewController
-        // browserUserInterfaceStyle = .dark
-        // view.tintColor = .white
-        
-        // Specify the allowed content types of your application via the Info.plist.
-        
-        // Do any additional setup after loading the view, typically from a nib.
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // create a blank document in our Application Support directory
+            // this template will be copied to Documents directory for new docs
+            // see didRequestDocumentCreationWithHandler delegate method
+            template = try? FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+                ).appendingPathComponent("Untitled.json")
+            // CHANGE MADE AFTER LECTURE 14
+            // the above change to the name of our blank template
+            // combined with the addition of an emojiart file type
+            // in Exported UTIs in Project Settings for Target's Info tab
+            // and changing the Document Type in that tab to edu.stanford.cs193p.emojiart
+            // makes it so documents can now be opened in our app from the Files app!
+            if template != nil {
+                // if we can't create the template
+                // don't enable the Create Document button in the UI
+                allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
+            }
+        }
+        //TESTING
+        allowsDocumentCreation = true
     }
     
     
     // MARK: UIDocumentBrowserViewControllerDelegate
-    
+    var template: URL?
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didRequestDocumentCreationWithHandler importHandler: @escaping (URL?, UIDocumentBrowserViewController.ImportMode) -> Void) {
-        let newDocumentURL: URL? = nil
-        
-        // Set the URL for the new document here. Optionally, you can present a template chooser before calling the importHandler.
-        // Make sure the importHandler is always called, even if the user cancels the creation request.
-        if newDocumentURL != nil {
-            importHandler(newDocumentURL, .move)
-        } else {
-            importHandler(nil, .none)
-        }
+        // just call the passed-in handler with our template
+        // we .copy it to make new documents
+        importHandler(template, .copy)
     }
     
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
@@ -63,12 +71,12 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     // MARK: Document Presentation
     
     func presentDocument(at documentURL: URL) {
-        
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let documentViewController = storyBoard.instantiateViewController(withIdentifier: "DocumentViewController") as! DocumentViewController
-        documentViewController.document = Document(fileURL: documentURL)
-        
-        present(documentViewController, animated: true, completion: nil)
+        let documentVC = storyBoard.instantiateViewController(withIdentifier: "DocumentMVC")
+        if let imageGalleryVC = documentVC.contents as? imageCollectionViewController {
+            imageGalleryVC.document = ImageGalleryDocument(fileURL: documentURL)
+        }
+        present(documentVC, animated: true)
     }
 }
 

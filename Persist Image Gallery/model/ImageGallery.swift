@@ -8,11 +8,20 @@
 
 import Foundation
 
-class ImageGallery {
-    var name: String
+struct ImageGallery: Codable {
     var addresses: [Address]
-    init(name: String, addresses: [Address]) {
-        self.name = name
-        self.addresses = addresses
+    var json: Data? {
+        return try? JSONEncoder().encode(self)
+    }
+    init() {
+        addresses = []
+    }
+    init?(json: Data) // take some JSON and try to init an ImageGallery from it
+    {
+        if let newValue = try? JSONDecoder().decode(ImageGallery.self, from: json) {
+            self = newValue
+        } else {
+            return nil
+        }
     }
 }

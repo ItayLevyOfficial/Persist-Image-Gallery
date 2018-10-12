@@ -7,7 +7,7 @@
 //
 
 import Foundation
-struct Address: Equatable {
+struct Address: Equatable, Codable {
     let aspectRatio: Double
     let url: URL
     
