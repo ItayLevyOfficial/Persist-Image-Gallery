@@ -81,6 +81,9 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
     //MARK: - Persistence
 
     @IBAction func close(_ sender: UIBarButtonItem) {
+        if imageGallery.addresses.count != 0 {
+            self.document?.thumbnail = (collectionView.cellForItem(at: Consts.originIndexPath) as? imageCollectionViewCell)?.imageView.image
+        }
         dismiss(animated: true){
             self.document?.close()
         }
