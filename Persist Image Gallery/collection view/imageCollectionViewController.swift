@@ -10,6 +10,8 @@ import UIKit
 
 class imageCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout,UICollectionViewDropDelegate, UICollectionViewDragDelegate {
     
+    //MARK: - gestures and loading from document
+    
     fileprivate func setSelfAsDelegate() {
         collectionView.dragInteractionEnabled = true
         collectionView.dropDelegate = self
@@ -35,6 +37,9 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
     override func viewDidLoad() {
         super.viewDidLoad()
         setSelfAsDelegate()
+        if URLCache.shared.memoryCapacity != Consts.cache.memoryCapacity {
+            URLCache.shared = Consts.cache
+        }
         collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinch)))
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         loadDataFromDocument()
@@ -167,13 +172,15 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
             save()
         }
     }
-    var cellWidth: CGFloat = 200
+    var cellWidth: CGFloat = Consts.cellStartWidth
     fileprivate func setImageViewImage(image: UIImage, forCell cell: imageCollectionViewCell) {
         DispatchQueue.main.async {
             cell.imageView.image = image
             cell.spinner.stopAnimating()
         }
     }
+    
+    
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = (collectionView.dequeueReusableCell(withReuseIdentifier: Consts.imageCellIdentifier, for: indexPath) as! imageCollectionViewCell)

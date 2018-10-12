@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 struct Consts {
+    static var cache: URLCache {return URLCache(memoryCapacity: 100000000, diskCapacity: 0, diskPath: nil)}
+    static let cellStartWidth: CGFloat = 200
     static let imageCellIdentifier = "Image Cell"
     static let placeHolderCellIdentifier = "Place Holder Cell"
     static let segueIdentifier = "Show Image"
