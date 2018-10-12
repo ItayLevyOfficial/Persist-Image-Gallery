@@ -124,7 +124,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
+        let destinationIndexPath = coordinator.destinationIndexPath ?? Consts.originIndexPath
         for item in coordinator.items {
             if let sourceIndexPath = item.sourceIndexPath {
                 performLocalDragDrop(collectionView, sourceIndexPath, destinationIndexPath)
@@ -142,6 +142,12 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
             collectionView.deleteItems(at: [sourceIndexPath])
             collectionView.insertItems(at: [destinationIndexPath])
         })
+    }
+    
+    fileprivate func showAlert() {
+        let alert = UIAlertController(title: "couldn't drop image", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "ok", style: .default))
+        self.present(alert, animated: true)
     }
     
     fileprivate func performExternalDrop(_ coordinator: UICollectionViewDropCoordinator, _ item: UICollectionViewDropItem, _ destinationIndexPath: IndexPath) {
@@ -162,6 +168,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
                     }
                 } else {
                     placeHolderContext.deletePlaceholder()
+                    self.showAlert()
                 }
             }
         }

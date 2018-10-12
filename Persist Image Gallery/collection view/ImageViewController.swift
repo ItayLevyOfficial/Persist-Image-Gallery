@@ -17,8 +17,8 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet{
             scrollView.delegate = self
-            scrollView.minimumZoomScale = 1/8
-            scrollView.maximumZoomScale = 5
+            scrollView.minimumZoomScale = Consts.scrollViewMinimumZoomScale
+            scrollView.maximumZoomScale = Consts.scrollViewMaximumZoomScale
         }
     }
     override func viewDidLoad() {

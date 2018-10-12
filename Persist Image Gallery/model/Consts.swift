@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 struct Consts {
+    static let originIndexPath = IndexPath(item: 0, section: 0)
+    static let scrollViewMinimumZoomScale: CGFloat = 1/8
+    static let scrollViewMaximumZoomScale: CGFloat = 5
     static var cache: URLCache {return URLCache(memoryCapacity: 100000000, diskCapacity: 0, diskPath: nil)}
     static let cellStartWidth: CGFloat = 200
     static let imageCellIdentifier = "Image Cell"
