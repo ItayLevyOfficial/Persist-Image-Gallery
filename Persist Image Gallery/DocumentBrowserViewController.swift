@@ -16,7 +16,7 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         delegate = self
         allowsDocumentCreation = false
         allowsPickingMultipleItems = false
-        //if UIDevice.current.userInterfaceIdiom == .pad {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             // create a blank document in our Application Support directory
             // this template will be copied to Documents directory for new docs
             // see didRequestDocumentCreationWithHandler delegate method
@@ -37,8 +37,7 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
                 // don't enable the Create Document button in the UI
                 allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
             }
-       // }
-        //TESTING
+        }
     }
     
     
@@ -50,7 +49,7 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         importHandler(template, .copy)
     }
     
-    func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
+    private func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
         guard let sourceURL = documentURLs.first else { return }
         
         // Present the Document View Controller for the first document that was picked.

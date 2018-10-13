@@ -91,7 +91,7 @@ extension URL {
 extension UIImage
 {
     private static let localImagesDirectory = "UIImage.storeLocallyAsJPEG"
-    
+
     static func urlToStoreLocallyAsJPEG(named: String) -> URL? {
         var name = named
         let pathComponents = named.components(separatedBy: "/")
@@ -129,6 +129,7 @@ extension UIImage
                 }
             }
         }
+        
         return nil
     }
 }

@@ -13,23 +13,23 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
     //MARK: - gestures and loading from document
     
     fileprivate func setSelfAsDelegate() {
-        collectionView.dragInteractionEnabled = true
-        collectionView.dropDelegate = self
-        collectionView.dragDelegate = self
-        collectionView.dataSource = self
-        collectionView.delegate = self
+        collectionView?.dragInteractionEnabled = true
+        collectionView?.dropDelegate = self
+        collectionView?.dragDelegate = self
+        collectionView?.dataSource = self
+        collectionView?.delegate = self
     }
     fileprivate func loadDataFromDocument() {
         document?.open{success in
             if success {
-                self.collectionView.performBatchUpdates({
+                self.collectionView?.performBatchUpdates({
                     self.title = self.document?.localizedName
                     self.imageGallery = self.document?.imageGallery ?? ImageGallery()
                     for i in self.imageGallery.addresses.indices {
-                        self.collectionView.insertItems(at: [IndexPath(item: i, section: 0)])
+                        self.collectionView?.insertItems(at: [IndexPath(item: i, section: 0)])
                     }
                 })
-                self.collectionView.collectionViewLayout.invalidateLayout()
+                self.collectionView?.collectionViewLayout.invalidateLayout()
             }
         }
     }
@@ -40,7 +40,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
         if URLCache.shared.memoryCapacity != Consts.cache.memoryCapacity {
             URLCache.shared = Consts.cache
         }
-        collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinch)))
+        collectionView?.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinch)))
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         loadDataFromDocument()
     }
@@ -59,7 +59,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
                 adjustCellWidthToScale(pinchRecognizer)
                 pinchRecognizer.scale = 1.0
                 //resizes the cells
-                collectionView.collectionViewLayout.invalidateLayout()
+                collectionView?.collectionViewLayout.invalidateLayout()
             default:
                 break
             }
@@ -82,7 +82,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
 
     @IBAction func close(_ sender: UIBarButtonItem) {
         if imageGallery.addresses.count != 0 {
-            self.document?.thumbnail = (collectionView.cellForItem(at: Consts.originIndexPath) as? imageCollectionViewCell)?.imageView.image
+            self.document?.thumbnail = (collectionView?.cellForItem(at: Consts.originIndexPath) as? imageCollectionViewCell)?.imageView.image
         }
         dismiss(animated: true){
             self.document?.close()
@@ -106,7 +106,7 @@ class imageCollectionViewController: UICollectionViewController, UICollectionVie
     }
     
     private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-        if let image = (collectionView.cellForItem(at: indexPath) as? imageCollectionViewCell)?.imageView.image {
+        if let image = (collectionView?.cellForItem(at: indexPath) as? imageCollectionViewCell)?.imageView.image {
             let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
             //dragItem.localObject = image
             return [dragItem]
