@@ -8,6 +8,8 @@
 * #### Uses cache to load images and galleries faster.
 * #### Supports Uploading galleries to iCloud.
 * #### Supports both iphone and ipad.
+
+
 ### Home screen
 ![Home screen](https://github.com/TiagoMaiaL/cs193p-assignments/raw/master/Images/persistent-image-gallery/persistent-image-gallery.png)
 
