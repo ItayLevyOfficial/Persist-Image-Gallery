@@ -1,7 +1,7 @@
 # IOS image gallery app.
 ## You can create galleries, add images and upload your galleries to the cloud.
 
-### Support: 
+### Supports: 
 * #### Adding images to a gallery from the web via drag and drop.
 * #### Viewing photos on full screen, zooming and moving through the image. 
 * #### The galleries are persistent.
